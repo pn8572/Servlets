@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="reportsApp">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<title>Testing Reports</title>
+</head>
+<body ng-controller="reportsCtrl">
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="jumbotron">
+				<h1>{{title}}</h1>
+				<h4>{{description}}<span class="badge">{{type}}</span></h4>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12 col-lg-12">
+			<div class="responsive">
+				<table class="table table-striped table-bordered table-hover display">
+					<thead>
+						<th>{{tableheader1}}</th>
+						<th>{{tableheader2}}</th>
+						<th>{{tableheader3}}</th>
+						<th class="text-center">{{tableheader4}}</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="myreport in reports">
+							<td width="30%"><a href="#" title="{{myreport.category}}">{{myreport.category}}</a></td>
+							<td width="30%"><a href="{{myreport.link}}" title="{{myreport.title}}">{{myreport.title}}</a></td>
+							<td width="30%">{{myreport.lastModifiedDate}}</td>
+							<td width="10%" class="text-center"><a href="{{myreport.link}}"><span class="glyphicon glyphicon-download"></span></a></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<td colspan="4"><h6>{{footnote}}</h6></td>
+					</tfoot>
+				</table>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-resource.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	angular.module('reportsApp', ['ngResource']);
+	var app = angular.module('reportsApp');
+	app.controller('reportsCtrl', function ($scope, $http) {
+		$scope.title = 'Testing Reports';
+		$scope.tableheader1 = 'Category';
+		$scope.tableheader2 = 'Title';
+		$scope.tableheader3 = 'Date';
+		$scope.tableheader4 = 'Download';
+		$scope.footnote = 'MPS with AngularJS is very cool';
+		$scope.reports = [];
+		$http({
+			method: 'GET',
+			url: '/Utility'
+			// url: 'https://qrng.anu.edu.au/API/jsonI.php?length=1&type=uint8&#8217'
+		}).then(successCallback, errorCallback);
+		function successCallback (response, status, headers, config) {
+			$scope.reports = response.data;
+			console.log($scope.reports);
+			$scope.description = $scope.reports.description;
+		}
+		function errorCallback (error, status, headers, config) {
+			$scope.reports = error;
+		}
+	});
+	
+</script>
+</body>
+</html>
